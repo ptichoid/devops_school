@@ -1,0 +1,52 @@
+---
+- name: Setting up web server
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Install httpd
+      ansible.builtin.dnf:
+        name: httpd
+        state: latest
+
+    - name: Starting httpd, and enable as a service
+      ansible.builtin.service:
+        name: httpd
+        state: started
+        enabled: true
+
+    - name: Starting firewalld, and enable as a service
+      ansible.builtin.service:
+        name: firewalld
+        state: started
+        enabled: true
+
+    - name: Check whether httpd is started
+      service_facts:
+      register: service_state
+    - debug:
+        var: service_state.ansible_facts.services["httpd.service"].state
+
+    - name: Enble http traffic
+      firewalld:
+        service: http
+        permanent: true
+        immediate: true
+        state: enabled
+
+    - name: Open port :80 on firewall
+      firewalld:
+        port: 80/tcp
+        permanent: true
+        immediate: true
+        state: enabled
+
+    - name: Copy template index.html
+      ansible.builtin.template:
+        src: "templates/index.html.j2"
+        dest: "/var/www/html/index.html"
+
+    - name: Restart apache
+      ansible.builtin.service:
+        name: httpd
+        state: restarted

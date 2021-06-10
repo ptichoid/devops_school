@@ -1,0 +1,6 @@
+---
+- include: ./common.yml
+- include: ./httpd/install-httpd.yml
+- include: ./httpd/uninstall-httpd.yml
+- include: ./network_manager/nwmanager.yml
+- include: ./grub/configure-grub.yml

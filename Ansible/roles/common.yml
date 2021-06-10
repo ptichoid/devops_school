@@ -1,0 +1,15 @@
+---
+- name: Check if python installed
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Update dnf
+      ansible.builtin.dnf:
+        name: '*'
+        state: latest
+
+    - name: Install python
+      ansible.builtin.dnf:
+        name: python3
+        state: latest

@@ -1,0 +1,11 @@
+---
+- name: Disable NetworkManager
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Disable nwmanager
+      ansible.builtin.service:
+        name: NetworkManager
+        state: stopped
+        enabled: no

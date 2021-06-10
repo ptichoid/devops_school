@@ -1,0 +1,24 @@
+---
+- name: Configure grub
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Add ifnames into grub config
+      ansible.builtin.replace:
+        path: /etc/default/grub
+        backup: yes
+        regexp: '\snet.ifnames=0'
+        replace: ' net.ifnames=0'
+
+    - name: Add biosdevname into grub config
+      ansible.builtin.replace:
+        path: /etc/default/grub
+        backup: yes
+        regexp: '\sbiosdevname=0'
+        replace: ' biosdevname=0'
+
+    - name: Generate grub configuration file
+      raw: grub2-mkconfig
+      args:
+        executable: /bin/bash

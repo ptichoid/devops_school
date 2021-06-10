@@ -1,0 +1,29 @@
+---
+- name: Delete webserver
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Disable http traffic
+      firewalld:
+        service: http
+        permanent: true
+        immediate: true
+        state: disabled
+
+    - name: Close port :80 on firewall
+      firewalld:
+        port: 80/tcp
+        permanent: true
+        immediate: true
+        state: disabled
+
+    - name: Delete index.html
+      ansible.builtin.file:
+        path: /var/www/html/index.html
+        state: absent
+
+    - name: Delete httpd
+      ansible.builtin.dnf:
+        name: httpd
+        state: absent
