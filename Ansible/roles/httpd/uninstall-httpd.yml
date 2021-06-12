@@ -1,5 +1,6 @@
 ---
 - name: Delete webserver
+  hosts: all
   become: true
 
   tasks:
