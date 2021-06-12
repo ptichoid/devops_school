@@ -1,0 +1,25 @@
+---
+- name: Include vars in PASSWDGEN
+  include_vars:
+    dir: ../vars
+
+- name: Generate encrypted password
+  shell: openssl passwd -6 {{ psswd }}
+  register: encrypted_passwd
+- debug:
+    var: encrypted_passwd.stdout
+
+- name: Create user and password
+  ansible.builtin.user:
+    name: "{{ item }}"
+    password: "{{ encrypted_passwd.stdout }}"
+    state: present
+    shell: /bin/bash
+    create_home: yes
+    home: /home/{{ item }}
+    comment: "{{ item }}@example.com"
+    update_password: on_create
+  register: uresult
+
+- debug:
+    var: uresult

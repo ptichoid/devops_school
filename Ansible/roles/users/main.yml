@@ -1,0 +1,13 @@
+---
+- name: Create users with vaulted passwords
+  hosts: node_1
+  become: true
+
+  tasks:
+    - name: Include vars in MAIN
+      include_vars:
+        dir: vars
+
+    - name: Create users
+      include_tasks: ./tasks/passwdgen.yml
+      loop: "{{ users }}"
